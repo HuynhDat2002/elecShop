@@ -1,0 +1,4 @@
+{
+    "watch":["src","prisma/schema.prisma"],
+    "ext":"ts,json"
+}

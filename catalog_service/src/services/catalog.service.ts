@@ -1,0 +1,54 @@
+import { ICatalogRepository } from "@/interfaces/catalogRepository.interface";
+import { classToPlain } from "class-transformer";
+import { NotFound } from "@/utils";
+export class CatalogService{
+    private _repository: ICatalogRepository;
+    constructor(repository:ICatalogRepository){
+        this._repository = repository;
+    }
+   async createProduct(input:any){
+        console.log('input',input)
+       const data = await this._repository.create(input)
+     
+       if(!data.id){
+        throw new Error("unable to create product")
+       }
+       return data
+    }
+
+    async updateProduct(input:any){
+       const data = await this._repository.update(input)
+       //emit event to update record in ElasticSearch
+       if(!data.id){
+        throw new Error("unable to update product")
+       }
+       return data
+        
+    }
+
+    //we will get product from ElasticSearch
+    async getProducts(limit:number,offset:number){
+        const products = await this._repository.find(limit,offset)
+        return products
+    }
+
+    async getProduct(id:number){
+        const product = await this._repository.findOne(id)
+        return product
+    }
+
+    async deleteProduct(id:number){
+        const product = await this._repository.delete(id)
+
+        //delete record from ElasticSearch
+
+        return product
+    }
+    async getProductStock(ids:number[]){
+        const products = await this._repository.getProductStock(ids)
+        if(!products){
+            throw new NotFound("Products not found")
+        }
+        return products
+    }
+}
