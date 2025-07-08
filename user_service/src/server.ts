@@ -2,7 +2,8 @@ import express,{Express} from 'express'
 import expressApp from './app'
 import 'module-alias/register';
 import {logger} from './utils'
-const PORT = 9000;
+import 'dotenv/config'
+const PORT = process.env.PORT;
 export const StartServer = async ()=>{
     const app = express();
     expressApp(app)

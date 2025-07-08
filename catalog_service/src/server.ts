@@ -2,6 +2,7 @@ import express,{Express} from 'express'
 import userApp from './app'
 import 'module-alias/register';
 import {logger} from './utils'
+import 'dotenv/config';
 const PORT = 5000;
 export const StartServer = async ()=>{
     const app = express();

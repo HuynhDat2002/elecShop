@@ -3,8 +3,9 @@ import { OrderRepositoryType } from "@/repository/order.repository";
 import { Order } from "@prisma/client";
 import { errorResponse } from "@/utils";
 import { OrderStatus } from "@/types/order.type";
-import { OrderLineItems, OrderWithLineItems } from "@/dto";
+import { InProcessOrder, OrderLineItems, OrderWithLineItems } from "@/dto";
 import { MessageType } from "@/types";
+import { SendCreateOrderMessage } from "./broker.service";
 
 export const CreateOrder = async (
     userId:number,
@@ -32,7 +33,7 @@ export const CreateOrder = async (
     // create order with line items
     const orderInput:OrderWithLineItems ={
         orderNumber: Math.floor(Math.random()*1000000),
-        txnId:null,
+        txnId:null, // payment id to keep track of successful payment status
         customerId:userId,
         amount: cartTotal,
         orderLineItems:orderLineItems,
@@ -47,11 +48,11 @@ export const CreateOrder = async (
     await cartRepo.clearCartData(userId)
     //fire a message to subscription service [catalog service] to update stock
 
-    // await  repo.publishOrderEvent(order,"ORDER_CREATED")
+    await SendCreateOrderMessage(orderInput)
 
     
     //return success message
-    return {message:"Order created successfully",orderNumber:order}
+    return {message:"Order created successfully",orderNumber:orderInput.orderNumber}
 }
 
 export const UpdateOrder =async (
@@ -78,6 +79,21 @@ export const GetOrder = async (orderId:number,repo:OrderRepositoryType)=>{
     return order
 }
 
+export const CheckoutOrder = async (orderNumber:number,repo:OrderRepositoryType)=>{
+    const order = await repo.findOrderByOrderNumber(orderNumber)
+    if(!order) throw new errorResponse.NotFound('Order not found')
+    const checkoutOrder:InProcessOrder = {
+        id:order.id,
+        orderNumber:order.orderNumber,
+        status:order.status,
+        customerId:order.customerId,
+        amount:Number(order.amount),
+        createdAt:order.createdAt,
+        updatedAt:order.updatedAt
+    }
+    return checkoutOrder
+}
+
 export const GetOrders = async (userId:number,repo:OrderRepositoryType)=>{
     const orders = await repo.findOrdersByCustomerId(userId)
     if((Array.isArray(orders) && orders.length<=0) || !Array.isArray(orders)) throw new errorResponse.NotFound('Order not found')
@@ -94,4 +110,6 @@ export const HandleSubscription = async (message:MessageType)=>{
     console.log("Message received by order Kafka consumer", message)
     // if (message.event === OrderEvent.CREATE_ORDER) 
     // call create order
+
+    
 }

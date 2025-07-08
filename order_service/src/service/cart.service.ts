@@ -7,6 +7,7 @@ import { CartEditRequestInput, CartRequestInput } from "@/dto"
 export const CreateCart = async (input:CartRequestInput & {customerId:number},repo:CartRepositoryType)=>{
     // make a call to our catalog service
     // synchoronize call
+    console.log("customerId",input.customerId)
     const product = await GetProductDetails(input.productId)
     logger.info(product)
     if(product.stock<input.qty){
@@ -17,7 +18,7 @@ export const CreateCart = async (input:CartRequestInput & {customerId:number},re
     const existingItem = await repo.findCartByProductId(input.customerId,input.productId)
 
     if(existingItem){
-        return repo.updateCart(existingItem.id,existingItem.qty+input.qty)
+        return await repo.updateCart(existingItem.id,existingItem.qty+input.qty)
     }
 
     const data = await repo.createCart(input.customerId,{

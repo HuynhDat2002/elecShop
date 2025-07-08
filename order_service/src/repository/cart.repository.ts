@@ -9,7 +9,7 @@ export type CartRepositoryType = {
     updateCart: (id:number,qty:number)=>Promise<CartLineItems>;
     deleteCart: (id:number)=>Promise<Boolean>
     clearCartData: (id:number)=>Promise<Boolean>
-    findCartByProductId:(customerId:number,productId:number)=>Promise<CartLineItems>
+    findCartByProductId:(customerId:number,productId:number)=>Promise<CartLineItems|null>
 
 
 }
@@ -94,7 +94,7 @@ const clearCartData = async (customerId:number): Promise<Boolean> =>{
     return true
 }
 
-const findCartByProductId = async (customerId:number,productId:number):Promise<CartLineItems> =>{
+const findCartByProductId = async (customerId:number,productId:number):Promise<CartLineItems|null> =>{
     
     const cartLineItems = await prisma.cartLineItems.findFirst({
         where:{
@@ -104,8 +104,8 @@ const findCartByProductId = async (customerId:number,productId:number):Promise<C
             productId:productId
         }
     })
-    if(!cartLineItems) throw new errorResponse.NotFound("CartLineItem not found with this productId and customerId")
-    return cartLineItems
+    // if(!cartLineItems) throw new errorResponse.NotFound("CartLineItem not found with this productId and customerId")
+    return cartLineItems ? cartLineItems :null
 }
 export const CartRepository: CartRepositoryType = {
     createCart,

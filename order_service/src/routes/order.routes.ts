@@ -29,7 +29,16 @@ router.get('/:id', RequestAuthorizer, asyncHandler(async (req: Request, res: Res
     const response = await orderService.GetOrder(parseInt(req.params.id),repo)
     return res.status(200).json(response)
 }))
-router.get('/', asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
+router.get('/:id/checkout', RequestAuthorizer, asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user
+    if(!user){
+        throw new errorResponse.NotFound('User not found')
+    }
+    const response = await orderService.CheckoutOrder(parseInt(req.params.id),repo)
+    return res.status(200).json(response)
+}))
+router.get('/',RequestAuthorizer, asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user
     if(!user){
         throw new errorResponse.NotFound('User not found')

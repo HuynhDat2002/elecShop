@@ -6,6 +6,7 @@ import { orderService } from '@/service';
 export type OrderRepositoryType = {
     createOrder: (lineItem: OrderWithLineItems) => Promise<number>
     findOrder: (orderId: number) => Promise<OrderWithLineItems | null>
+    findOrderByOrderNumber: (orderNumber: number) => Promise<OrderWithLineItems | null>
     updateOrderStatus: (orderId: number, status: string) => Promise<OrderWithLineItems>;
     deleteOrder: (orderId: number) => Promise<Boolean>
     findOrdersByCustomerId: (customerId: number) => Promise<OrderWithLineItems[]>
@@ -69,6 +70,21 @@ const findOrder = async (orderId: number): Promise<OrderWithLineItems | null> =>
 }
 
 
+const findOrderByOrderNumber = async (orderNumber: number): Promise<OrderWithLineItems | null> => {
+    const order = await prisma.order.findUnique({
+        where: {
+            orderNumber: orderNumber,
+        },
+        include: {
+            orderLineItems: true
+        }
+    }) as OrderWithLineItems
+
+    if(!order) throw new errorResponse.NotFound('Order not found')
+    return order
+}
+
+
 const updateOrderStatus = async (orderId:number,status:string)=>{
     if(!Object.values(OrderStatus).includes(status as OrderStatus))
         throw new errorResponse.ValidationError('Wrong status')
@@ -120,6 +136,7 @@ const findOrdersByCustomerId = async (customerId:number)=>{
 export const OrderRepository: OrderRepositoryType = {
     createOrder,
     findOrder,
+    findOrderByOrderNumber,
     updateOrderStatus,
     deleteOrder,
     findOrdersByCustomerId

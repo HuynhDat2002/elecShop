@@ -19,7 +19,13 @@ export class CatalogRepository implements ICatalogRepository{
 
     }
     async update(data: Product): Promise<Product> {
-        const product = ProductFactory.build()
+        const product = await prisma.product.update({
+            where:{
+                id:data.id
+            },
+            data
+        })
+        if(!product) throw new errorResponse.ValidationError('Can not update product')
         return product
     }
     async delete(data: any): Promise<{}> {

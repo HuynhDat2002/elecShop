@@ -1,0 +1,82 @@
+import { Consumer, Kafka,logLevel, Partitioners, Producer } from "kafkajs";
+import { MessageBrokerType, MessageHandler, PublishType } from "./broker.type";
+import { MessageType, TOPIC_TYPE } from "@/types";
+
+
+// configuration properties kafka
+const CLIENT_ID = process.env.CLIENT_ID || 'order-service'
+const GROUP_ID = process.env.GROUP_ID || 'order-service-group'
+const BROKERS = [process.env.BROKERS_1 || 'localhost:9092']
+
+const kafka = new Kafka({
+    clientId: CLIENT_ID,
+    brokers: BROKERS,
+    logLevel: logLevel.INFO
+})
+
+let producer:Producer;
+let consumer:Consumer;
+
+// create topic
+const createTopic  = async (topic:string[])=>{
+    const topics = topic.map((t)=>({
+        topic:t,
+        numPartitions:2,
+        replicationFactor:1
+    }))
+
+    const admin = kafka.admin()
+    await admin.connect()
+    const topicExists = await admin.listTopics()
+    for (const t of topics){
+        if(!topicExists.includes(t.topic)){
+            await admin.createTopics({
+                topics:[t]
+            })
+        }
+    }
+    await admin.disconnect()
+}
+
+const connectProducer = async <T>(): Promise<T> =>{
+    await createTopic(['OrderEvents'])
+    if(!producer){
+        console.log('producer not exist before')
+        producer = kafka.producer()
+    }
+    producer = kafka.producer({
+        createPartitioner: Partitioners.DefaultPartitioner
+    })
+
+    await producer.connect()
+    return producer as unknown as T
+}
+
+const disconnectProducer = async (): Promise<void> =>{
+    if(producer) await producer.disconnect()
+}
+
+const publish = async (data: PublishType): Promise<boolean> =>{
+   const producer = await connectProducer<Producer>()
+   const result = await producer.send({
+         topic:data.topic,
+            messages:[
+                {
+                    headers:data.headers,
+                    key:data.event,
+                    value:JSON.stringify(data.message)
+                }
+            ]
+   })
+   
+   return result.length>0
+}
+
+
+
+
+export const MessageBroker: MessageBrokerType ={
+    connectProducer,
+    disconnectProducer,
+    publish, 
+}
