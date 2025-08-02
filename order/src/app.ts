@@ -1,27 +1,27 @@
 import express ,{Request,Response,NextFunction,Express} from 'express';
 import 'module-alias/register';
-// import router from './routes';
-// import { connectDB } from './db/prisma.init';
+import router from './routes';
+import { connectDB } from './db/prisma.init';
 import { HandleErrorWithLogger,httpLogger } from './utils';
 import 'dotenv/config'
-import {paymentRouter} from '@/routes' 
+// import router from '@/api/catalog.route'
 import cors from 'cors'
 import { MessageBroker } from './utils';
 import { Consumer, Producer } from 'kafkajs';
-import { InitializeBroker } from '@/services/broker.service';
+import { InitializeBroker } from './service';
 
 const expressApp = async (app:Express)=>{
 
     app.use(express.json())
-    app.use(cors({origin:"*"}))
+    app.use(cors())
     console.log('app')
 
-    // await connectDB()
+    await connectDB()
     app.use(httpLogger)
     
     await InitializeBroker()
 
-    app.use("/api/",paymentRouter)
+    app.use("/api/",router)
         
      //handling error notfound
      app.use((req:Request,res:Response,next:NextFunction)=>{

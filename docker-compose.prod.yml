@@ -1,0 +1,117 @@
+version: "3.8"
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+  
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9092"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:9092"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.1
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - node.name=elasticsearch
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - kafka-elastic:/usr/share/elasticsearch/data
+
+  mysql-kafka-catalog:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_USER: kafka_catalog
+      MYSQL_PASSWORD: trongdat1335
+      MYSQL_ROOT_PASSWORD: trongdatroot
+      MYSQL_DATABASE: catalog
+    ports:
+      - "3302:3306"
+    volumes:
+      - mysql-kafka-catalog:/var/lib/mysql
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  mysql-kafka-order:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_USER: kafka_order
+      MYSQL_PASSWORD: trongdat1335
+      MYSQL_ROOT_PASSWORD: trongdatroot
+      MYSQL_DATABASE: order
+    ports:
+      - "3303:3306"
+    volumes:
+      - mysql-kafka-order:/var/lib/mysql
+    deploy:
+      mode: replicated
+      replicas: 1
+  mysql-kafka-user:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_USER: kafka_user
+      MYSQL_PASSWORD: trongdat1335
+      MYSQL_ROOT_PASSWORD: trongdatroot
+      MYSQL_DATABASE: user
+    ports:
+      - "3300:3306"
+    volumes:
+      - mysql-kafka-user:/var/lib/mysql
+    deploy:
+      mode: replicated
+      replicas: 1
+
+
+  user-electronic-dev:
+    build:
+      context: ./user
+      dockerfile: Dockerfile
+      target: dev
+    image: tdat/user-electronic:dev
+    container_name: user-electronic-dev
+   
+
+  user-electronic-prod:
+    build:
+      context: ./user
+      dockerfile: Dockerfile
+      target: prod
+    image: tdat/user-electronic:prod
+    container_name: user-electronic-prod
+
+  
+volumes:
+  mysql-kafka-catalog:
+    external: true
+  mysql-kafka-order:
+    external: true
+  mysql-kafka-user:
+    external: true
+  film-elastic:
+    driver: local

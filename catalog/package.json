@@ -1,12 +1,12 @@
 {
-  "name": "payment",
+  "name": "catalog_service",
   "version": "1.0.0",
   "main": "index.js",
   "_moduleAliases": {
     "@": "src"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "nodemon --inspect",
     "start": "npm run prisma:deploy && node -r module-alias/register dist/server.js",
     "prisma": "npm run prisma:generate && npm run prisma:deploy",
@@ -14,29 +14,43 @@
     "prisma:deploy": "npx prisma migrate deploy",
     "build": "tsc"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@elastic/elasticsearch": "^8.17.1",
+    "@prisma/client": "^6.2.1",
     "ajv": "^8.17.1",
-    "axios": "^1.8.4",
+    "axios": "^1.8.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^5.1.0",
+    "dotenv": "^16.5.0",
+    "events": "^3.3.0",
+    "express": "^4.21.2",
     "kafkajs": "^2.2.4",
     "module-alias": "^2.2.3",
-    "nodemon": "^3.1.9",
     "pino": "^9.6.0",
     "pino-http": "^10.4.0",
     "pino-pretty": "^13.0.0",
-    "stripe": "^18.0.0",
-    "ts-node": "^10.9.2"
+    "prisma": "^6.2.1"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.3.0",
     "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.1",
-    "@types/node": "^22.13.17",
+    "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.10.2",
+    "@types/rosie": "^0.0.45",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.9",
+    "rosie": "^2.1.1",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "tsx": "^4.20.3",
-    "typescript": "^5.8.2"
+    "typescript": "^5.7.2"
   }
 }

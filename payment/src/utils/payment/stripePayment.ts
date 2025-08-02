@@ -2,9 +2,7 @@ import { P } from "pino";
 import { PaymentGateway } from "./payment.type";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-    apiVersion: "2025-03-31.basil",
-})
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 const createPayment =  async (
     amount:number, 
     metadata:{
