@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///home/trongdat/Documents/electronicShop/frontendUser/src/app/not-found.tsx"],"sourcesContent":["export default function Custom404() {\n    return (\n        <div className=\"font-bold text-xl flex justify-center items-center w-screen h-screen text-black\">\n            <h1 className=\"\">404 | Page Not Found</h1>\n        </div>\n    )\n}"],"names":[],"mappings":";;;;;AAAe,SAAS;IACpB,qBACI,8OAAC;QAAI,WAAU;kBACX,cAAA,8OAAC;YAAG,WAAU;sBAAG;;;;;;;;;;;AAG7B","debugId":null}}]
-}
