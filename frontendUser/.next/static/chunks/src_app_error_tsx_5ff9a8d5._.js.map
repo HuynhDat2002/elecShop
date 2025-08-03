@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///home/trongdat/Documents/electronicShop/frontendUser/src/app/error.tsx"],"sourcesContent":["'use client'\n\nimport Error from \"next/error\";\n\nexport default function ErrorBoundary( {error}:{error:Error}){\n    console.log('error',error)\n    return (\n        <div className=\"text-black font-bold text-xl flex justify-center items-center content-center place-content-center h-screen w-screen\">\n            500 | Server side error\n           \n        </div>\n    )\n}"],"names":[],"mappings":";;;;AAAA;;AAIe,SAAS,cAAe,EAAC,KAAK,EAAe;IACxD,QAAQ,GAAG,CAAC,SAAQ;IACpB,qBACI,6LAAC;QAAI,WAAU;kBAAsH;;;;;;AAK7I;KARwB","debugId":null}}]
+}
