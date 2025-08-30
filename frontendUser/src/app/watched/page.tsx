@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import CourseCard from "../../component/CourseCard";
 import { Course } from "@/types";
-import CourseList from "../../component/CourseList";
+import CourseList from "../../component/CarouselList";
 export default function Watched() {
     const [watched, setWatched] = useState<Course[]>([]);
     useEffect(() => {

@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import StoreProvider from "./StoreProvider";
+import Breadcrumb from "@/component/Breadcrumb";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -36,8 +37,9 @@ export default function RootLayout({
         >
           <Header />
           <div className="flex flex-col bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen overflow-hidden">
-            <div className="w-[100%] flex mx-auto mt-10">
+            <div className="w-[100%] mx-auto mt-10">
               <Suspense fallback={<div>Loading...</div>}>
+              <Breadcrumb/>
                 {children}
                 <ToastContainer position="top-right" className={"text-xl"} />
               </Suspense>

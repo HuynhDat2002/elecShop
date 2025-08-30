@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from "react";
-import { Image } from "@heroui/react";
+import Image from 'next/image'
 export default function CategoryList() {
     const categoryList = [
         {
@@ -11,7 +11,7 @@ export default function CategoryList() {
         {
             key: "mouse",
             name: "Chuột",
-            image: "https://img.pikbest.com/png-images/20240601/computer-mouse-image-on-white-background_10593222.png!sw800"
+            image: "/laptop.png"
         },
         {
             key: "phone",

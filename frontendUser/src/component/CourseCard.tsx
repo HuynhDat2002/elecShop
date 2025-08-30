@@ -6,15 +6,16 @@ import { useRouter } from 'next/navigation'
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { toast } from 'react-toastify';
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { ChevronLeft, ChevronRight, Star, Heart, ShoppingCart } from 'lucide-react';
 
-export default function CourseCard({ course }: { course: Course }) {
+export default function CourseCard({ product }: { product: Course }) {
   const router = useRouter()
   const [wishList, setWishList] = useState("")
   const [isWishList, setIsWishList] = useState(false)
 
   useEffect(() => {
     async function checkWishList() {
-      const response = await fetch(`/api/checkWishList/${course.id}`, {
+      const response = await fetch(`/api/checkWishList/${product.id}`, {
         method: 'GET'
       });
       const data = await response.json();
@@ -41,7 +42,7 @@ export default function CourseCard({ course }: { course: Course }) {
     const response = await fetch(`/api/addToWishList`, {
       method: "POST",
       body: JSON.stringify({
-        id: course.id,
+        id: product.id,
       }),
     })
     const data = await response.json();
@@ -60,7 +61,7 @@ export default function CourseCard({ course }: { course: Course }) {
     const response = await fetch(`/api/addToCart`, {
       method: "POST",
       body: JSON.stringify({
-        id: course.id,
+        id: product.id,
       }),
     })
     const data = await response.json();
@@ -73,65 +74,132 @@ export default function CourseCard({ course }: { course: Course }) {
 
   }
   return (
+    // <div
+
+    //   className='flex flex-wrap justify-center'
+    // >
+    //   <div className="flex flex-col w-[90%] sm:w-[70%] xs:w-[80%] h-[400px] sm:h-[450px] md:h-[400px] xl:h-[500px] 2xl:h-[550px] md:w-[90%] gap-5 bg-white border-1 border-gray-300  shadow-lg rounded-lg overflow-hidden">
+    //     <div className="flex relative">
+
+    //       <Image
+    //         src={course.thumb}
+    //         alt={course.name}
+    //         width={154}
+    //         height={250}
+    //         className="w-full h-[200px] sm:h-[250px] md:h-[200px] 2xl:h-[300px] border-b-1 border-gray-300 shadow-md object-cover"
+    //         unoptimized
+    //       />
+    //       <div
+    //         className="cursor-pointer"
+    //         onClick={() => handleWishList()}
+    //       >
+    //         <svg
+    //           xmlns="http://www.w3.org/2000/svg"
+    //           viewBox="0 0 24 24"
+    //           strokeWidth="1.5"
+    //           stroke="black"
+    //           className={`size-7 2xl:size-10 absolute top-2 right-2 ${isWishList ? "fill-red-500" : "fill-white"} hover:fill-red-500`}
+    //         >
+    //           <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+    //         </svg>
+
+    //       </div>
+
+    //     </div>
+    //     <div className="flex flex-col text-start px-1 mb-2 justify-between gap-3 sm:gap-3 flex-1">
+    //       <p className="text-lg xl:text-2xl dark:text-zinc-400 text-zinc-600 font-bold line-clamp-2 basis-1/2">
+    //         {course.name}
+    //       </p>
+    //       <p className="text-md xl:text-xl text-zinc-600 basis-1/4">
+    //         {course.shortDescription}
+    //       </p>
+    //       <div className="flex flex-row justify-between items-center px-2 basis-1/4">
+    //         <p className="text-start xl:text-2xl text-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent ">{course.price} VNĐ</p>
+    //         <div className="flex flex-row flex justify-center items-center gap-4">
+    //           <div onClick={()=>handleCart()}>
+
+    //         <ShoppingCartIcon className="size-6 text-black"/>
+    //           </div>
+    //         <button
+    //           onClick={() => handleCourse(course.id)}
+    //           className="flex flex-row  justify-center items-center cursor-pointer text-white end-1.5 top-1 bottom-1 bg-ctBlue-header hover:bg-ctBlue-header shadow-md focus:ring-2 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-2"
+    //         >
+    //           <span className="text-lg font-semibold">Xem chi tiết</span>
+    //           <ChevronRightIcon className="size-6 text-white" />
+    //         </button>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+
+
+    // </div>
+
     <div
-
-      className='flex flex-wrap justify-center'
+      key={product.id}
+      onClick={() =>{}}
+      className="flex flex-col flex-shrink-0 w-78 h-120 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group border border-gray-100 hover:border-gray-200"
     >
-      <div className="flex flex-col w-[90%] sm:w-[70%] xs:w-[80%] h-[400px] sm:h-[450px] md:h-[400px] xl:h-[500px] 2xl:h-[550px] md:w-[90%] gap-5 bg-white border-1 border-gray-300  shadow-lg rounded-lg overflow-hidden">
-        <div className="flex relative">
+      {/* Product Image */}
+      <div className="relative overflow-hidden rounded-t-xl">
+        <img
+          src={product.thumb}
+          alt={product.name}
+          className="w-80 h-70 object-cover group-hover:scale-105 transition-transform duration-300"
+        />
 
-          <Image
-            src={course.thumb}
-            alt={course.name}
-            width={154}
-            height={250}
-            className="w-full h-[200px] sm:h-[250px] md:h-[200px] 2xl:h-[300px] border-b-1 border-gray-300 shadow-md object-cover"
-            unoptimized
-          />
-          <div
-            className="cursor-pointer"
-            onClick={() => handleWishList()}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="black"
-              className={`size-7 2xl:size-10 absolute top-2 right-2 ${isWishList ? "fill-red-500" : "fill-white"} hover:fill-red-500`}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-            </svg>
+       
 
-          </div>
+        {/* Discount */}
 
-        </div>
-        <div className="flex flex-col text-start px-1 mb-2 justify-between gap-3 sm:gap-3 flex-1">
-          <p className="text-lg xl:text-2xl dark:text-zinc-400 text-zinc-600 font-bold line-clamp-2 basis-1/2">
-            {course.name}
-          </p>
-          <p className="text-md xl:text-xl text-zinc-600 basis-1/4">
-            {course.shortDescription}
-          </p>
-          <div className="flex flex-row justify-between items-center px-2 basis-1/4">
-            <p className="text-start xl:text-2xl text-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent ">{course.price} VNĐ</p>
-            <div className="flex flex-row flex justify-center items-center gap-4">
-              <div onClick={()=>handleCart()}>
 
-            <ShoppingCartIcon className="size-6 text-black"/>
-              </div>
-            <button
-              onClick={() => handleCourse(course.id)}
-              className="flex flex-row  justify-center items-center cursor-pointer text-white end-1.5 top-1 bottom-1 bg-ctBlue-header hover:bg-ctBlue-header shadow-md focus:ring-2 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-2"
-            >
-              <span className="text-lg font-semibold">Xem chi tiết</span>
-              <ChevronRightIcon className="size-6 text-white" />
-            </button>
-            </div>
-          </div>
+        {/* Quick Actions */}
+        <div className="absolute bottom-3 right-3 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <button className="bg-white/90 p-2 rounded-full hover:bg-white transition-colors">
+            <Heart className="w-4 h-4 text-gray-600" />
+          </button>
+          <button className="bg-white/90 p-2 rounded-full hover:bg-white transition-colors">
+            <ShoppingCart className="w-4 h-4 text-gray-600" />
+          </button>
         </div>
       </div>
 
+      {/* Product Info */}
+      <div className="flex flex-col flex-grow text-start px-1 justify-between p-4">
+        <h3 className="font-semibold text-lg text-gray-800 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors ">
+          {product.name}
+        </h3>
 
+        {/* Rating */}
+        <div className="mt-auto flex items-center gap-2 mb-2">
+          <div className="flex items-center">
+            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+            <span className="text-sm font-medium text-gray-700 ml-1">
+              {product.averageRating}
+            </span>
+          </div>
+          <span className="text-sm text-gray-500">
+            (250 đánh giá)
+          </span>
+        </div>
+
+        {/* Price */}
+        <div className="mt-auto flex items-center gap-2 mb-3">
+          <span className="text-xl font-bold text-red-600">
+            {product.price}₫
+          </span>
+          {product && (
+            <span className="text-sm text-gray-500 line-through">
+              50000000₫
+            </span>
+          )}
+        </div>
+
+        {/* Add to Cart Button
+                                <button className="mt-auto w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                                    Thêm vào giỏ hàng
+                                </button> */}
+      </div>
     </div>
   );
 }

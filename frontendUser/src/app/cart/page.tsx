@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import CourseCartCard from "../../component/CourseCartCard";
 import { Course } from "@/types";
-import CourseList from "../../component/CourseList";
+import CourseList from "../../component/CarouselList";
 export default function WishList() {
     const [cart, setCart] = useState<Course[]>([]);
 
